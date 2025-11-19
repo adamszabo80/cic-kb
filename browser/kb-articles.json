@@ -1,0 +1,1405 @@
+[
+    {
+        "id": "OUT-001",
+        "title": "Outlook startet nicht oder friert beim Öffnen ein",
+        "category": "Outlook",
+        "symptom": "Outlook öffnet sich nicht oder reagiert sofort nach dem Start nicht mehr. Es erscheint oft nur das Startlogo.",
+        "causes": "Beschädigte Outlook-Profile, fehlerhafte Add-Ins oder korrupte Office-Installationsdateien.",
+        "questions": [
+            {
+                "text": "Haben Sie den Computer bereits neu gestartet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Tritt das Problem auch im abgesicherten Modus auf (outlook.exe /safe)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurden vor kurzem neue Add-Ins oder Software installiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist eine Antiviren-Software aktiv, die Outlook blockieren könnte?",
+                "type": "boolean"
+            },
+            {
+                "text": "Funktionieren andere Office-Anwendungen (Word, Excel) problemlos?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Analysieren Sie die Windows-Ereignisanzeige (Event Viewer) unter 'Anwendungen' auf Fehler mit Event ID 1000. Identifizieren Sie das fehlerhafte Modul (z.B. ntdll.dll, mso.dll), um die Ursache einzugrenzen.",
+            "Führen Sie eine Online-Reparatur der Office-Installation durch (Systemsteuerung > Programme und Features > Microsoft 365 > Ändern > Online-Reparatur). Dies ersetzt beschädigte DLLs und Registry-Keys.",
+            "Erstellen Sie ein neues Outlook-Profil über die Systemsteuerung ('Mail (Microsoft Outlook)' > 'Profile anzeigen' > 'Hinzufügen'). Starten Sie Outlook mit dem neuen Profil, um Profilkorruption auszuschließen."
+        ],
+        "tags": [
+            "outlook",
+            "start",
+            "crash",
+            "safe-mode"
+        ],
+        "l1_steps": [
+            "Starten Sie Outlook im abgesicherten Modus (Windows-Taste + R, dann 'outlook.exe /safe' eingeben).",
+            "Erstellen Sie ein neues Outlook-Profil über die Systemsteuerung (Mail > Profile anzeigen > Hinzufügen)."
+        ]
+    },
+    {
+        "id": "OUT-002",
+        "title": "Outlook kann keine Verbindung zum Exchange Server herstellen",
+        "category": "Outlook",
+        "symptom": "In der Statusleiste steht 'Getrennt' oder 'Verbindungsversuch'. Emails werden nicht aktualisiert.",
+        "causes": "Netzwerkprobleme, DNS-Fehler, veraltete Authentifizierungs-Token oder TLS-Probleme.",
+        "questions": [
+            {
+                "text": "Ist eine aktive Internetverbindung vorhanden (Browser testen)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Sie mit dem Firmennetzwerk oder VPN verbunden?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde das Kennwort kürzlich geändert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Funktioniert der Zugriff über Outlook Web Access (OWA)?",
+                "type": "choice",
+                "options": [
+                    "Nur OWA",
+                    "Nur Outlook",
+                    "Beides"
+                ]
+            },
+            {
+                "text": "Ist der 'Offline-Modus' in Outlook deaktiviert?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie die Verbindung mit dem 'Microsoft Support and Recovery Assistant (SaRA)' oder dem Befehl 'Test-NetConnection outlook.office365.com -Port 443' in der PowerShell.",
+            "Löschen Sie veraltete Identitäten im Credential Manager (Anmeldeinformationsverwaltung) und entfernen Sie den Ordner '%localappdata%\\Microsoft\\IdentityCache', um Authentifizierungsprobleme zu beheben.",
+            "Überprüfen Sie die Autodiscover-DNS-Einträge (CNAME autodiscover.outlook.com) und stellen Sie sicher, dass IPv6 im Netzwerkadapter nicht die Verbindung blockiert (testweise deaktivieren)."
+        ],
+        "tags": [
+            "outlook",
+            "verbindung",
+            "exchange",
+            "offline"
+        ],
+        "l1_steps": [
+            "Prüfen Sie Ihre Internetverbindung, indem Sie eine Webseite im Browser öffnen.",
+            "Starten Sie den Computer neu und versuchen Sie es erneut."
+        ]
+    },
+    {
+        "id": "OUT-003",
+        "title": "Emails bleiben im Postausgang hängen",
+        "category": "Outlook",
+        "symptom": "Gesendete Nachrichten verbleiben im Postausgang und werden nicht verschickt. Oft erscheint keine Fehlermeldung.",
+        "causes": "Zu große Anhänge, blockierende Add-Ins (Virenscanner), beschädigte OST-Datei oder Send/Receive-Gruppenfehler.",
+        "questions": [
+            {
+                "text": "Wie groß ist die Email inklusive Anhänge (Limit oft 25-35MB)?",
+                "type": "text"
+            },
+            {
+                "text": "Haben Sie versucht, die Email zu löschen und neu zu erstellen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Sie sicher online und mit dem Server verbunden?",
+                "type": "boolean"
+            },
+            {
+                "text": "Blockiert evtl. ein Virenscanner den ausgehenden Mailverkehr?",
+                "type": "boolean"
+            },
+            {
+                "text": "Funktioniert der Versand über OWA (Outlook Web App)?",
+                "type": "choice",
+                "options": [
+                    "Nur OWA",
+                    "Nur Outlook",
+                    "Beides"
+                ]
+            }
+        ],
+        "steps": [
+            "Aktivieren Sie das Outlook-Logging (Datei > Optionen > Erweitert > Protokollierung der Problembehandlung aktivieren), reproduzieren Sie den Fehler und analysieren Sie die OPMLog.log Datei.",
+            "Benennen Sie die OST-Datei um (bei geschlossenem Outlook), um beim nächsten Start eine neue Synchronisierung vom Server zu erzwingen (Vorsicht: Nur bei Exchange-Cached-Mode).",
+            "Überprüfen Sie die 'Senden-Empfangen-Gruppen' (Strg+Alt+S) und setzen Sie diese auf Standardwerte zurück oder erstellen Sie eine neue Gruppe für das betroffene Konto."
+        ],
+        "tags": [
+            "outlook",
+            "postausgang",
+            "versand",
+            "anhang"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob die Email im 'Postausgang' liegt und löschen Sie sie ggf., falls sie blockiert.",
+            "Starten Sie Outlook neu und prüfen Sie unten rechts den Verbindungsstatus."
+        ]
+    },
+    {
+        "id": "OUT-004",
+        "title": "Empfangene Emails erscheinen nicht im Posteingang",
+        "category": "Outlook",
+        "symptom": "Der Benutzer erwartet Emails, aber der Posteingang bleibt leer oder aktualisiert sich nicht.",
+        "causes": "Ansichtsfilter, serverseitige Regeln, 'Relevanter' Posteingang oder Synchronisierungsfehler.",
+        "questions": [
+            {
+                "text": "Haben Sie im Ordner 'Junk-E-Mail' nachgesehen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie den 'Relevanten' Posteingang (Reiter 'Sonstige' prüfen)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Filter aktiv (steht unten links 'Filter angewendet')?",
+                "type": "boolean"
+            },
+            {
+                "text": "Können Sie die Email über die Suchfunktion finden?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind die Mails im Outlook Web Access (OWA) sichtbar?",
+                "type": "choice",
+                "options": [
+                    "Nur OWA",
+                    "Nur Outlook",
+                    "Beides"
+                ]
+            }
+        ],
+        "steps": [
+            "Starten Sie Outlook mit dem Parameter 'outlook.exe /cleanviews', um alle benutzerdefinierten Ansichten und Filter zurückzusetzen.",
+            "Überprüfen Sie im Exchange Admin Center die 'Nachrichtenverfolgung' (Message Trace), um festzustellen, ob die Mail den Server erreicht hat und wohin sie zugestellt wurde (z.B. Quarantäne, anderer Ordner).",
+            "Kontrollieren Sie clientseitige und serverseitige Regeln (PowerShell: Get-InboxRule -Mailbox <User>) auf Weiterleitungen oder Löschaktionen."
+        ],
+        "tags": [
+            "outlook",
+            "posteingang",
+            "filter",
+            "regeln"
+        ],
+        "l1_steps": [
+            "Prüfen Sie den Ordner 'Junk-E-Mail' und 'Gelöschte Elemente'.",
+            "Schauen Sie im Outlook Web Access (OWA) nach, ob die Mail dort sichtbar ist."
+        ]
+    },
+    {
+        "id": "OUT-005",
+        "title": "Outlook fordert wiederholt zur Passworteingabe auf",
+        "category": "Outlook",
+        "symptom": "Ein Anmeldefenster erscheint immer wieder, auch nach korrekter Eingabe des Passworts.",
+        "causes": "Modern Authentication Probleme, veraltete Credentials, TPM-Fehler oder beschädigtes WAM (Web Account Manager) Plugin.",
+        "questions": [
+            {
+                "text": "Wurde das Passwort kürzlich geändert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie den Haken bei 'Anmeldedaten speichern' gesetzt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Tritt das Problem auch bei anderen Office-Apps (Word, Teams) auf?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie Multi-Faktor-Authentifizierung (MFA)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist das Windows-Datum und die Uhrzeit korrekt?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Setzen Sie den WAM-Status zurück, indem Sie die Office-Identitäten in der Registry unter 'HKEY_CURRENT_USER\\Software\\Microsoft\\Office\\16.0\\Common\\Identity' bereinigen (Backup erstellen!).",
+            "Löschen Sie die 'Microsoft.AAD.BrokerPlugin'-Ordner im AppData-Verzeichnis, falls es sich um ein TPM/Broker-Problem handelt (erfordert Admin-Rechte).",
+            "Trennen Sie das Arbeitskonto unter Windows-Einstellungen > Konten > 'Auf Arbeits- oder Schulkonto zugreifen' und verbinden Sie es neu, um das PRT (Primary Refresh Token) zu erneuern."
+        ],
+        "tags": [
+            "outlook",
+            "passwort",
+            "anmeldung",
+            "credentials"
+        ],
+        "l1_steps": [
+            "Melden Sie sich in Office ab (Datei > Office-Konto > Abmelden) und wieder an.",
+            "Löschen Sie gespeicherte Anmeldeinformationen in der Windows-Anmeldeinformationsverwaltung."
+        ]
+    },
+    {
+        "id": "OUT-006",
+        "title": "Outlook ist extrem langsam beim Laden oder Wechseln von Ordnern",
+        "category": "Outlook",
+        "symptom": "Outlook reagiert träge, der Wechsel zwischen Emails oder Ordnern dauert mehrere Sekunden.",
+        "causes": "Große OST-Datei (>50GB), zu viele Elemente in einem Ordner (>5000), Fragmentierung oder Hardware-Engpässe.",
+        "questions": [
+            {
+                "text": "Wie groß ist das Postfach (Datei > Tools > Postfachbereinigung)?",
+                "type": "text"
+            },
+            {
+                "text": "Sind viele zusätzliche Postfächer eingebunden?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist der PC generell langsam oder nur Outlook?",
+                "type": "choice",
+                "options": [
+                    "Nur Outlook",
+                    "Ganzer PC",
+                    "Unsicher"
+                ]
+            },
+            {
+                "text": "Wurde der PC lange nicht neu gestartet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie den 'Cache-Modus'?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Reduzieren Sie den 'Sync Slider' (Offline-Einstellungen) auf 3 oder 6 Monate, um die lokale OST-Datei zu verkleinern und die Festplatten-I/O zu entlasten.",
+            "Deaktivieren Sie die Hardwarebeschleunigung in der Registry (Key: DisableHardwareAcceleration), falls Grafiktreiberprobleme die UI-Renderung verzögern.",
+            "Kompaktieren Sie die Datendatei manuell über Systemsteuerung > Mail > Datendateien > Einstellungen > Jetzt komprimieren, um Fragmentierung zu beheben."
+        ],
+        "tags": [
+            "outlook",
+            "performance",
+            "langsam",
+            "cache"
+        ],
+        "l1_steps": [
+            "Deaktivieren Sie testweise alle Add-Ins (Datei > Optionen > Add-Ins).",
+            "Starten Sie den PC neu, um den Arbeitsspeicher zu leeren."
+        ]
+    },
+    {
+        "id": "OUT-007",
+        "title": "Suchfunktion in Outlook liefert keine oder falsche Ergebnisse",
+        "category": "Outlook",
+        "symptom": "Die Suche findet keine Emails, obwohl diese existieren. Es werden 'Keine Ergebnisse' angezeigt.",
+        "causes": "Korrupter Windows-Suchindex, unvollständige Indizierung oder falsche Scope-Einstellungen.",
+        "questions": [
+            {
+                "text": "Ist der Filter 'Aktuelles Postfach' ausgewählt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Erscheint eine Meldung 'Indizierung läuft noch'?",
+                "type": "boolean"
+            },
+            {
+                "text": "Findet die Suche im OWA (Webbrowser) die Mails?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde Outlook kürzlich aktualisiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist der Windows-Suchdienst gestartet?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Setzen Sie den Windows-Suchindex vollständig zurück (Systemsteuerung > Indizierungsoptionen > Erweitert > Neu erstellen). Dies kann mehrere Stunden dauern.",
+            "Prüfen Sie in den Indizierungsoptionen, ob Outlook explizit als zu indizierender Ort ausgewählt ist.",
+            "Falls der lokale Index irreparabel ist: Wechseln Sie temporär zur Server-Suche, indem Sie den Registry-Key 'PreventClientLookup' deaktivieren (bzw. prüfen, ob er fälschlicherweise aktiv ist)."
+        ],
+        "tags": [
+            "outlook",
+            "suche",
+            "index",
+            "search"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob Updates für Office verfügbar sind (Datei > Office-Konto > Updateoptionen).",
+            "Nutzen Sie die Suche im Outlook Web Access (OWA) als vorübergehende Lösung."
+        ]
+    },
+    {
+        "id": "OUT-008",
+        "title": "Kalender synchronisiert nicht mit mobilen Geräten",
+        "category": "Outlook",
+        "symptom": "Termine, die am PC erstellt wurden, fehlen auf dem Handy (oder umgekehrt).",
+        "causes": "ActiveSync-Probleme, Drosselung durch Exchange, korrupte Kalenderelemente.",
+        "questions": [
+            {
+                "text": "Nutzen Sie die offizielle Outlook-App oder die native Mail-App?",
+                "type": "choice",
+                "options": [
+                    "Outlook App",
+                    "Native Mail-App",
+                    "Andere"
+                ]
+            },
+            {
+                "text": "Ist die Internetverbindung am Handy stabil?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde das Konto am Handy bereits entfernt und neu hinzugefügt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Energiesparmodi am Handy aktiv?",
+                "type": "boolean"
+            },
+            {
+                "text": "Werden Emails korrekt synchronisiert?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie im Exchange Admin Center unter 'Mobile Geräte', ob das Gerät in Quarantäne ist oder blockiert wurde (Allow/Block/Quarantine-Liste).",
+            "Nutzen Sie das 'Get-MobileDeviceStatistics' Cmdlet in PowerShell, um den letzten Sync-Status und mögliche Fehlercodes des Geräts auszulesen.",
+            "Löschen Sie die Partnerschaft des mobilen Geräts im OWA (Allgemein > Mobile Geräte) und richten Sie das Konto am Smartphone komplett neu ein."
+        ],
+        "tags": [
+            "outlook",
+            "kalender",
+            "mobile",
+            "sync"
+        ],
+        "l1_steps": [
+            "Entfernen Sie das Konto auf dem mobilen Gerät und fügen Sie es neu hinzu.",
+            "Installieren Sie die Outlook-App neu."
+        ]
+    },
+    {
+        "id": "OUT-009",
+        "title": "Freigegebene Postfächer oder Kalender sind nicht sichtbar",
+        "category": "Outlook",
+        "symptom": "Ein neu freigegebenes Postfach taucht nicht automatisch in der Ordnerliste auf.",
+        "causes": "Verzögerung im Automapping, AD-Replikationslatenz oder fehlende Berechtigungen.",
+        "questions": [
+            {
+                "text": "Wann wurde die Freigabe eingerichtet (weniger als 60 Min)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie Outlook bereits neu gestartet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Sie sicher, dass Sie 'Vollzugriff' haben?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist das Postfach im OWA sichtbar ('Weiteres Postfach öffnen')?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde das Postfach manuell hinzugefügt?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Überprüfen Sie via PowerShell (Get-MailboxPermission), ob das Attribut 'AutoMapping' für den Benutzer auf $true gesetzt ist.",
+            "Entfernen Sie die Berechtigung und fügen Sie sie erneut hinzu (Remove-MailboxPermission / Add-MailboxPermission), um den Automapping-Trigger neu zu setzen.",
+            "Löschen Sie den XML-Eintrag für das Autodiscover im lokalen AppData-Ordner, um Outlook zu zwingen, die aktuelle Konfiguration vom Server neu abzurufen."
+        ],
+        "tags": [
+            "outlook",
+            "freigabe",
+            "shared-mailbox",
+            "berechtigung"
+        ],
+        "l1_steps": [
+            "Warten Sie bis zu 60 Minuten, da Berechtigungen Zeit zur Synchronisierung benötigen.",
+            "Starten Sie Outlook neu."
+        ]
+    },
+    {
+        "id": "OUT-010",
+        "title": "Outlook Add-Ins verursachen Abstürze oder Fehlfunktionen",
+        "category": "Outlook",
+        "symptom": "Outlook stürzt ab oder zeigt Fehlermeldungen bezüglich eines Add-Ins (z.B. PDF-Maker, CRM).",
+        "causes": "Inkompatibilität mit neuer Outlook-Version, Speicherlecks im Add-In, Konflikte zwischen Add-Ins.",
+        "questions": [
+            {
+                "text": "Tritt der Fehler im abgesicherten Modus auf?",
+                "type": "boolean"
+            },
+            {
+                "text": "Welches Add-In wird in der Fehlermeldung genannt?",
+                "type": "text"
+            },
+            {
+                "text": "Wurde das Add-In kürzlich aktualisiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist Outlook auf dem neuesten Stand?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind andere Kollegen auch betroffen?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Analysieren Sie die 'Add-In-Resilienz' in der Registry (HKEY_CURRENT_USER\\Software\\Microsoft\\Office\\16.0\\Outlook\\Resiliency\\DoNotDisableAddinList), um zu sehen, ob Outlook das Add-In bereits deaktiviert hat.",
+            "Installieren Sie die neueste Version des VSTO-Add-Ins oder wechseln Sie wenn möglich auf das moderne Web-Add-In (Get-Addins via OWA).",
+            "Erhöhen Sie testweise das Timeout für Add-In-Ladezeiten via Registry, falls das Add-In nur beim Start zu langsam ist und deshalb deaktiviert wird."
+        ],
+        "tags": [
+            "outlook",
+            "add-in",
+            "absturz",
+            "plugin"
+        ],
+        "l1_steps": [
+            "Starten Sie Outlook im abgesicherten Modus, um zu prüfen, ob das Problem weg ist.",
+            "Deaktivieren Sie das zuletzt installierte Add-In."
+        ]
+    },
+    {
+        "id": "EXC-001",
+        "title": "Email Zustellung verzögert oder fehlerhaft",
+        "category": "Exchange",
+        "symptom": "Emails kommen erst Stunden später an oder der Absender erhält einen Unzustellbarkeitsbericht (NDR).",
+        "causes": "Mail-Loop, RBL-Listing (Blacklist), Transportregeln oder DNS-Probleme.",
+        "questions": [
+            {
+                "text": "Haben Sie einen NDR (Fehlermeldung) erhalten?",
+                "type": "text"
+            },
+            {
+                "text": "Betrifft es interne oder externe Empfänger?",
+                "type": "choice",
+                "options": [
+                    "Intern",
+                    "Extern",
+                    "Beides"
+                ]
+            },
+            {
+                "text": "Ist die Email-Adresse des Empfängers korrekt?",
+                "type": "text"
+            },
+            {
+                "text": "Sind Anhänge enthalten?",
+                "type": "boolean"
+            },
+            {
+                "text": "Tritt das Problem bei allen Emails auf?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Führen Sie einen 'Extended Message Trace' im Exchange Admin Center durch, um den genauen Hop zu finden, an dem die Mail hängt (z.B. 'Pending' oder 'Dropped').",
+            "Analysieren Sie den E-Mail-Header (Message Header Analyzer), um Verzögerungen (Latency) zwischen den einzelnen Mailservern zu identifizieren.",
+            "Prüfen Sie, ob die eigene IP-Adresse auf einer Blacklist steht (z.B. Spamhaus), falls Mails an externe Empfänger abgelehnt werden."
+        ],
+        "tags": [
+            "exchange",
+            "zustellung",
+            "ndr",
+            "delay"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob Sie eine Unzustellbarkeitsnachricht (NDR) erhalten haben.",
+            "Fragen Sie den Empfänger, ob die Mail im Spam-Ordner gelandet ist."
+        ]
+    },
+    {
+        "id": "EXC-002",
+        "title": "Email Weiterleitungen funktionieren nicht zuverlässig",
+        "category": "Exchange",
+        "symptom": "Weitergeleitete Mails kommen beim externen Empfänger nicht an.",
+        "causes": "Outbound Spam Policies, Remote Domain Einstellungen oder Mailbox-Forwarding-Blockaden.",
+        "questions": [
+            {
+                "text": "Ist die Weiterleitung an eine externe Adresse gerichtet?",
+                "type": "text"
+            },
+            {
+                "text": "Wurde die Weiterleitung im OWA oder in Outlook eingerichtet?",
+                "type": "choice",
+                "options": [
+                    "Nur OWA",
+                    "Nur Outlook",
+                    "Beides"
+                ]
+            },
+            {
+                "text": "Kommt eine Fehlermeldung zurück?",
+                "type": "text"
+            },
+            {
+                "text": "Funktioniert die direkte Zustellung an die externe Adresse?",
+                "type": "text"
+            },
+            {
+                "text": "Ist es eine automatische Weiterleitung?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie im Security & Compliance Center die 'Outbound Spam Policies'. Oft ist 'Automatic forwarding' auf 'Off' gesetzt.",
+            "Kontrollieren Sie die 'Remote Domains' Einstellungen im Exchange Admin Center, ob 'Allow automatic forwarding' für die Zieldomäne erlaubt ist.",
+            "Nutzen Sie PowerShell (Get-Mailbox | Select ForwardingAddress), um versteckte Weiterleitungen auf Mailbox-Ebene zu identifizieren und ggf. zu korrigieren."
+        ],
+        "tags": [
+            "exchange",
+            "weiterleitung",
+            "forwarding",
+            "spam-filter"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob die Weiterleitung im OWA (Einstellungen > Mail > Weiterleitung) aktiv ist.",
+            "Testen Sie eine manuelle Weiterleitung einer einzelnen Mail."
+        ]
+    },
+    {
+        "id": "EXC-003",
+        "title": "SPF, DKIM oder DMARC sind falsch konfiguriert",
+        "category": "Exchange",
+        "symptom": "Eigene Emails landen beim Empfänger im Spam-Ordner.",
+        "causes": "Fehlende DNS-Records, Syntaxfehler im SPF, fehlende DKIM-Signatur.",
+        "questions": [
+            {
+                "text": "Wurde kürzlich der Provider gewechselt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Landen Mails bei allen Empfängern im Spam?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie einen externen Newsletter-Dienst?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie Zugriff auf die DNS-Verwaltung?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde eine neue Domain registriert?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Validieren Sie den SPF-Record (v=spf1...) auf Syntaxfehler und stellen Sie sicher, dass alle sendenden IPs (auch externe Dienstleister) inkludiert sind.",
+            "Aktivieren Sie DKIM im M365 Defender Portal für die Domain und veröffentlichen Sie die CNAME-Einträge im DNS.",
+            "Setzen Sie eine DMARC-Policy (z.B. p=none für Monitoring), um Berichte zu erhalten und die Reputation der Domain zu überwachen."
+        ],
+        "tags": [
+            "exchange",
+            "dns",
+            "spf",
+            "dkim",
+            "spam"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob die Mail Anhänge oder Links enthält, die als Spam gewertet werden könnten.",
+            "Bitten Sie den Empfänger, Ihre Adresse zur 'Sicheren Absenderliste' hinzuzufügen."
+        ]
+    },
+    {
+        "id": "EXC-004",
+        "title": "Benutzer erhalten Spam trotz aktivem Filter",
+        "category": "Exchange",
+        "symptom": "Offensichtliche Spam- oder Phishing-Mails landen im Posteingang.",
+        "causes": "Spam Confidence Level (SCL) zu niedrig bewertet, Safe-Sender-Liste, Spoofing.",
+        "questions": [
+            {
+                "text": "Ist der Absender bekannt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Enthält die Mail verdächtige Links?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde die Mail als 'Kein Junk' markiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Tritt dies häufiger auf?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist der Absender in der eigenen Organisation?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Analysieren Sie den Header der Spam-Mail auf den 'X-Forefront-Antispam-Report' und den SCL-Wert, um zu verstehen, warum der Filter nicht gegriffen hat.",
+            "Passen Sie die Anti-Phishing-Richtlinien im Defender an (z.B. Impersonation Protection für VIPs aktivieren).",
+            "Reichen Sie die Mail über das 'Admin Submission' Portal an Microsoft zur Analyse ein, um die globalen Filter zu trainieren."
+        ],
+        "tags": [
+            "exchange",
+            "spam",
+            "phishing",
+            "filter"
+        ],
+        "l1_steps": [
+            "Markieren Sie die Mail als 'Kein Junk' (Rechtsklick > Junk-E-Mail > Keine Junk-E-Mail).",
+            "Blockieren Sie den Absender, falls es sich um offensichtlichen Spam handelt."
+        ]
+    },
+    {
+        "id": "EXC-005",
+        "title": "Email Signaturen werden nicht korrekt angewendet",
+        "category": "Exchange",
+        "symptom": "Die automatische Signatur fehlt oder sieht formatierungstechnisch falsch aus.",
+        "causes": "Transportregeln (Disclaimer) greifen nicht, HTML-Formatierungsprobleme, Client-Settings überschreiben Server.",
+        "questions": [
+            {
+                "text": "Nutzen Sie eine zentrale Signatur-Software?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist das Email-Format auf HTML eingestellt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Fehlt die Signatur auch bei internen Mails?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde die Signatur in OWA geprüft?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie ein mobiles Gerät?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie die Exchange Transportregel für den Disclaimer. Stellen Sie sicher, dass keine Ausnahmebedingung (Exception) greift.",
+            "Falls eine Drittanbieter-Lösung (z.B. CodeTwo, Exclaimer) genutzt wird: Prüfen Sie die Connectoren und ob die Mail über deren Server geroutet wird.",
+            "Stellen Sie sicher, dass im HTML-Code der Signatur keine externen Ressourcen blockiert werden und nutzen Sie Inline-CSS statt externer Stylesheets."
+        ],
+        "tags": [
+            "exchange",
+            "signatur",
+            "formatierung",
+            "html"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob das Email-Format auf 'HTML' eingestellt ist.",
+            "Senden Sie eine Test-Mail an sich selbst, um die Signatur zu prüfen."
+        ]
+    },
+    {
+        "id": "OD-001",
+        "title": "OneDrive synchronisiert keine Dateien oder Ordner",
+        "category": "OneDrive",
+        "symptom": "Das OneDrive-Symbol in der Taskleiste ist grau oder zeigt ein rotes X. Dateien haben kein grünes Häkchen.",
+        "causes": "Prozess abgestürzt, Authentifizierungsfehler, Dateinamen-Restriktionen.",
+        "questions": [
+            {
+                "text": "Ist das OneDrive-Symbol in der Taskleiste sichtbar?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind Sie am PC angemeldet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie den PC neu gestartet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Gibt es eine Fehlermeldung beim Klick auf das Symbol?",
+                "type": "text"
+            },
+            {
+                "text": "Sind die Dateien im Webbrowser verfügbar?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Führen Sie einen vollständigen Reset des OneDrive-Clients durch: '%localappdata%\\Microsoft\\OneDrive\\onedrive.exe /reset'. Warten Sie 2 Minuten, bevor Sie ihn neu starten.",
+            "Prüfen Sie die Registry auf Policies, die den Sync verhindern (z.B. 'DisableFileSyncNGSC' unter HKLM\\Software\\Policies\\Microsoft\\OneDrive).",
+            "Analysieren Sie die Sync-Logs im Ordner '%localappdata%\\Microsoft\\OneDrive\\logs', falls der Reset nicht hilft."
+        ],
+        "tags": [
+            "onedrive",
+            "sync",
+            "reset",
+            "client"
+        ],
+        "l1_steps": [
+            "Starten Sie die OneDrive-App neu (Rechtsklick auf Taskleisten-Icon > OneDrive schließen).",
+            "Prüfen Sie, ob Sie sich im Webportal (portal.office.com) anmelden können."
+        ]
+    },
+    {
+        "id": "OD-002",
+        "title": "Synchronisierungskonflikte bei gemeinsam genutzten Dateien",
+        "category": "OneDrive",
+        "symptom": "Dateien zeigen ein rotes Ausrufezeichen. Meldung: 'Konflikt erkannt'.",
+        "causes": "Gleichzeitige Bearbeitung ohne Co-Authoring-Support, Offline-Änderungen, Versionierungsprobleme.",
+        "questions": [
+            {
+                "text": "Bearbeiten mehrere Personen die Datei?",
+                "type": "boolean"
+            },
+            {
+                "text": "Waren Sie offline, als Sie gespeichert haben?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist 'Office-Dateien synchronisieren' in den Einstellungen aktiv?",
+                "type": "boolean"
+            },
+            {
+                "text": "Handelt es sich um ein Office-Dokument (Word/Excel)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie die Datei umbenannt?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Stellen Sie sicher, dass in den OneDrive-Einstellungen der Haken bei 'Office-Anwendungen verwenden, um Office-Dateien zu synchronisieren' gesetzt ist (erlaubt Co-Authoring).",
+            "Löschen Sie den Office-Dokumenten-Cache über das 'Upload Center' oder 'Office Center', um hängende Uploads zu bereinigen.",
+            "Falls Konflikte persistieren: Speichern Sie die lokale Version als Kopie, löschen Sie das Original lokal und lassen Sie es vom Server neu herunterladen."
+        ],
+        "tags": [
+            "onedrive",
+            "konflikt",
+            "merge",
+            "shared"
+        ],
+        "l1_steps": [
+            "Speichern Sie Ihre Änderungen lokal als Kopie ('Speichern unter').",
+            "Benennen Sie die Datei um, um den Konflikt zu lösen."
+        ]
+    },
+    {
+        "id": "OD-003",
+        "title": "OneDrive zeigt „Synchronisierung ausgesetzt“ oder „Fehler“",
+        "category": "OneDrive",
+        "symptom": "Das Symbol zeigt ein Pause-Zeichen. Statusmeldung sagt 'Synchronisierung angehalten'.",
+        "causes": "Getaktete Verbindung (Metered Connection), Batteriesparmodus, Speicherplatzmangel.",
+        "questions": [
+            {
+                "text": "Ist der Laptop im Energiesparmodus?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie einen mobilen Hotspot?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie die Synchronisierung manuell pausiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist genug Speicherplatz auf der Festplatte?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist das WLAN als 'getaktet' eingestellt?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Deaktivieren Sie in den OneDrive-Einstellungen unter 'Netzwerk' jegliche Bandbreitenbegrenzung (Upload/Download).",
+            "Prüfen Sie die Windows-Einstellungen für 'Getaktete Verbindungen' und stellen Sie sicher, dass OneDrive diese ignorieren darf.",
+            "Falls die Meldung fehlerhaft ist: Melden Sie das Konto ab und wieder an, um den Status-Check neu zu triggern."
+        ],
+        "tags": [
+            "onedrive",
+            "pause",
+            "fehler",
+            "netzwerk"
+        ],
+        "l1_steps": [
+            "Prüfen Sie, ob der Energiesparmodus am Laptop aktiv ist (deaktivieren).",
+            "Stellen Sie sicher, dass Sie nicht über eine getaktete Verbindung (Hotspot) verbunden sind."
+        ]
+    },
+    {
+        "id": "OD-004",
+        "title": "Dateien verschwinden nach Synchronisierung oder sind nicht auffindbar",
+        "category": "OneDrive",
+        "symptom": "Benutzer vermisst Dateien, die er lokal gespeichert glaubte.",
+        "causes": "Verschiebung durch andere User, Löschung, Ransomware, Synchronisierungsfehler.",
+        "questions": [
+            {
+                "text": "Haben Sie im Papierkorb (Web) nachgesehen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie Zugriff auf den Ordner im Browser?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde der Ordner evtl. umbenannt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie mehrere Geräte?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie die Suchfunktion im Web genutzt?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Nutzen Sie die Funktion 'OneDrive wiederherstellen' (Restore your OneDrive) im Web-Portal (Zahnrad > Optionen), um den Zustand von vor z.B. 2 Tagen wiederherzustellen (Ransomware-Schutz).",
+            "Prüfen Sie den 'Zweiten Papierkorb' (Second-Stage Recycle Bin) in SharePoint/OneDrive, falls der erste leer ist.",
+            "Durchsuchen Sie das Audit-Log im Compliance Center nach 'FileDeleted' Events für diesen Benutzer."
+        ],
+        "tags": [
+            "onedrive",
+            "verloren",
+            "papierkorb",
+            "restore"
+        ],
+        "l1_steps": [
+            "Prüfen Sie den Papierkorb im OneDrive-Webportal.",
+            "Nutzen Sie die 'Suchen'-Funktion im Webportal."
+        ]
+    },
+    {
+        "id": "OD-005",
+        "title": "OneDrive fordert wiederholt zur Anmeldung auf",
+        "category": "OneDrive",
+        "symptom": "OneDrive meldet 'Anmeldung erforderlich', akzeptiert aber die Anmeldung nicht dauerhaft.",
+        "causes": "Cached Credentials Konflikt, AAD-Broker Fehler, Passwortänderung.",
+        "questions": [
+            {
+                "text": "Haben Sie das Passwort geändert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Funktioniert die Anmeldung im Browser?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie MFA aktiviert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Tritt das Problem auch bei Teams auf?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist Windows aktuell?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Löschen Sie alle Einträge beginnend mit 'OneDrive Cached Credential' in der Windows-Anmeldeinformationsverwaltung.",
+            "Entfernen Sie den Registry-Key 'HKEY_CURRENT_USER\\Software\\Microsoft\\OneDrive\\Accounts', um die Kontokonfiguration hart zurückzusetzen (Vorsicht: erfordert Neueinrichtung).",
+            "Prüfen Sie, ob das Gerät im Azure AD als 'Compliant' markiert ist, falls Conditional Access Richtlinien den Zugriff blockieren."
+        ],
+        "tags": [
+            "onedrive",
+            "anmeldung",
+            "login",
+            "loop"
+        ],
+        "l1_steps": [
+            "Melden Sie sich in den OneDrive-Einstellungen ab und wieder an.",
+            "Löschen Sie die OneDrive-Anmeldeinformationen im Windows-Tresor."
+        ]
+    },
+    {
+        "id": "OD-006",
+        "title": "Speichergrenze erreicht, ohne Warnung oder Hinweis",
+        "category": "OneDrive",
+        "symptom": "Uploads schlagen fehl, Meldung 'Speicher voll' oder rotes X.",
+        "causes": "Papierkorb belegt Speicher, Versionierung verbraucht Platz, Quota-Limit erreicht.",
+        "questions": [
+            {
+                "text": "Haben Sie den Papierkorb im Web geleert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wie viel Speicher wird im Web angezeigt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie sehr große Dateien gespeichert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde das Speicherlimit kürzlich geändert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie 'Versionsverlauf' intensiv?",
+                "type": "text"
+            }
+        ],
+        "steps": [
+            "Leeren Sie den 'Zweiten Papierkorb' (Site Collection Recycle Bin), da dieser ebenfalls auf das Quota angerechnet wird.",
+            "Prüfen Sie die 'Storage Metrics' Seite (/_layouts/15/storman.aspx), um versteckte Speicherfresser wie Versionshistorien zu finden.",
+            "Erhöhen Sie das Speicherlimit im SharePoint/OneDrive Admin Center oder via PowerShell (Set-SPOSite -Identity <Url> -StorageQuota <MB>)."
+        ],
+        "tags": [
+            "onedrive",
+            "speicher",
+            "quota",
+            "full"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "OD-007",
+        "title": "Freigabe von Dateien funktioniert nicht oder erzeugt Fehlermeldungen",
+        "category": "OneDrive",
+        "symptom": "Beim Versuch zu teilen erscheint 'Fehler beim Teilen' oder der Link funktioniert nicht.",
+        "causes": "Externe Sharing-Policy blockiert, Limit für Freigaben erreicht, User nicht berechtigt.",
+        "questions": [
+            {
+                "text": "Wollen Sie an extern oder intern teilen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Erhalten Sie eine spezifische Fehlermeldung?",
+                "type": "text"
+            },
+            {
+                "text": "Funktioniert das Teilen im Web?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist die Datei evtl. geschützt (IRM)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie die Berechtigung zum Teilen?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie im SharePoint Admin Center unter 'Teilen', ob das externe Teilen für OneDrive auf 'Jeder' oder 'Neue und vorhandene Gäste' eingestellt ist.",
+            "Kontrollieren Sie, ob die Datei in einem Ordner liegt, der bereits restriktive Berechtigungen hat (Vererbung).",
+            "Setzen Sie die Freigabe-Berechtigungen für die spezifische Datei via PowerShell zurück, falls die ACL korrupt ist."
+        ],
+        "tags": [
+            "onedrive",
+            "freigabe",
+            "sharing",
+            "error"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-001",
+        "title": "SharePoint-Seiten laden nicht oder zeigen Fehler",
+        "category": "SharePoint",
+        "symptom": "Seite bleibt weiß, lädt ewig oder zeigt '404' / '500' Fehler.",
+        "causes": "Dienstausfall, Browser-Cache, gelöschte Site, DNS-Probleme.",
+        "questions": [
+            {
+                "text": "Funktioniert es in einem anderen Browser?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie den Cache geleert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Können Kollegen die Seite öffnen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist die URL korrekt?",
+                "type": "text"
+            },
+            {
+                "text": "Erscheint eine spezifische Fehlernummer (404, 500)?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie das 'Service Health Dashboard' im M365 Admin Center auf allgemeine SharePoint-Störungen.",
+            "Nutzen Sie die F12-Entwicklertools im Browser (Tab 'Netzwerk'), um zu sehen, ob bestimmte Skripte oder Ressourcen blockiert werden (HTTP 403/500).",
+            "Falls es eine 404 ist: Prüfen Sie im SharePoint Admin Center unter 'Gelöschte Websites', ob die Site Collection versehentlich gelöscht wurde und stellen Sie sie wieder her."
+        ],
+        "tags": [
+            "sharepoint",
+            "laden",
+            "404",
+            "browser"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-002",
+        "title": "Benutzer können nicht auf freigegebene Dokumente zugreifen",
+        "category": "SharePoint",
+        "symptom": "Meldung 'Zugriff verweigert' oder 'Sie benötigen Berechtigungen'.",
+        "causes": "Fehlende Mitgliedschaft, unterbrochene Vererbung, 'Limited Access' Problematik.",
+        "questions": [
+            {
+                "text": "Wurde die Freigabe-Einladung angenommen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist der Benutzer in der richtigen Gruppe?",
+                "type": "boolean"
+            },
+            {
+                "text": "Hat der Besitzer die Freigabe erteilt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Funktioniert der Zugriff auf andere Dateien?",
+                "type": "boolean"
+            },
+            {
+                "text": "Erscheint die Anforderung 'Zugriff anfordern'?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Nutzen Sie die Funktion 'Berechtigungen überprüfen' (Check Permissions) in den erweiterten Berechtigungseinstellungen der Bibliothek, um die effektiven Rechte des Users zu sehen.",
+            "Prüfen Sie, ob der User nur 'Limited Access' hat, weil er nur auf ein einzelnes Item berechtigt wurde, aber die Liste nicht sehen darf.",
+            "Fügen Sie den User temporär zur Gruppe 'Besitzer' hinzu, um zu testen, ob es ein Berechtigungs- oder ein technisches Problem ist."
+        ],
+        "tags": [
+            "sharepoint",
+            "zugriff",
+            "berechtigung",
+            "access"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-003",
+        "title": "Berechtigungen sind falsch oder unklar konfiguriert",
+        "category": "SharePoint",
+        "symptom": "Benutzer sehen Inhalte, die sie nicht sehen sollten, oder umgekehrt.",
+        "causes": "Gebrochene Vererbung (Unique Permissions), AD-Gruppenverschachtelung, falsche Sharing-Links.",
+        "questions": [
+            {
+                "text": "Wurden Berechtigungen auf Ordnerebene geändert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sind AD-Gruppen im Einsatz?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde 'Teilen' statt direkter Berechtigung genutzt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist die Bibliothek neu?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sehen alle Benutzer das Falsche oder nur einer?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Navigieren Sie zu den Bibliothekseinstellungen und wählen Sie 'Berechtigungen für diese Dokumentbibliothek'. Suchen Sie nach dem Hinweis 'Diese Bibliothek hat eindeutige Berechtigungen'.",
+            "Setzen Sie die Vererbung zurück ('Berechtigungen erben'), um alle individuellen Freigaben auf Unterordnern zu löschen und den Standard wiederherzustellen.",
+            "Prüfen Sie 'Zugriffsanforderungen und Einladungen' in den Websiteeinstellungen, um offene oder hängende Freigabeanfragen zu sehen."
+        ],
+        "tags": [
+            "sharepoint",
+            "berechtigung",
+            "vererbung",
+            "security"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-004",
+        "title": "Dokumentversionierung funktioniert nicht wie erwartet",
+        "category": "SharePoint",
+        "symptom": "Ältere Versionen sind nicht verfügbar oder Änderungen wurden nicht gespeichert.",
+        "causes": "Versionierung deaktiviert, Limit erreicht, 'Draft Item Security'.",
+        "questions": [
+            {
+                "text": "Ist die Versionierung in der Bibliothek aktiv?",
+                "type": "text"
+            },
+            {
+                "text": "Wurde die Datei ausgecheckt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sehen Sie den Versionsverlauf im Kontextmenü?",
+                "type": "text"
+            },
+            {
+                "text": "Sind Sie Besitzer der Datei?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurden Versionen manuell gelöscht?",
+                "type": "text"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie in den Versionierungseinstellungen, ob 'Haupt- und Nebenversionen erstellen' aktiviert ist und wie viele Versionen behalten werden.",
+            "Kontrollieren Sie die Einstellung 'Entwurfssicherheit' (Draft Item Security). Wenn 'Nur Benutzer, die Elemente bearbeiten können' gesetzt ist, sehen Leser keine neuen Versionen bis zur Veröffentlichung.",
+            "Nutzen Sie PowerShell, um Versionen massenhaft zu bereinigen oder Limits anzupassen, falls das UI dies nicht zulässt."
+        ],
+        "tags": [
+            "sharepoint",
+            "versionierung",
+            "history",
+            "restore"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-005",
+        "title": "SharePoint-Suche liefert keine oder veraltete Ergebnisse",
+        "category": "SharePoint",
+        "symptom": "Neu hochgeladene Dateien werden nicht gefunden.",
+        "causes": "Crawler-Latenz, Indizierung auf Listenebene deaktiviert, Draft-Status.",
+        "questions": [
+            {
+                "text": "Wann wurde die Datei hochgeladen (>24h)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist die Datei als 'Hauptversion' veröffentlicht?",
+                "type": "boolean"
+            },
+            {
+                "text": "Finden Sie die Datei, wenn Sie direkt in der Bibliothek suchen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist die Bibliothek für die Suche gesperrt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie Berechtigung auf die Datei?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Prüfen Sie in den 'Erweiterten Einstellungen' der Bibliothek, ob 'Soll der Inhalt dieser Dokumentbibliothek in den Suchergebnissen angezeigt werden?' auf 'Ja' steht.",
+            "Fordern Sie eine Neuindizierung der Bibliothek an (Bibliothekseinstellungen > Erweitert > Dokumentbibliothek neu indizieren). Dies markiert den Content für den nächsten Crawl.",
+            "Überprüfen Sie das 'Suchschema' im SharePoint Admin Center auf 'Managed Properties', falls spezifische Metadaten nicht suchbar sind."
+        ],
+        "tags": [
+            "sharepoint",
+            "suche",
+            "index",
+            "find"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-006",
+        "title": "Synchronisierung von SharePoint Bibliotheken mit OneDrive schlägt fehl",
+        "category": "SharePoint",
+        "symptom": "Klick auf 'Synchronisieren' in SharePoint bewirkt nichts oder zeigt Fehler.",
+        "causes": "Zu viele Items (>300k), Pfadlänge > 400 Zeichen, Client-Policy.",
+        "questions": [
+            {
+                "text": "Wie viele Dateien sind in der Bibliothek (ca.)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie bereits viele Bibliotheken synchronisiert?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist OneDrive gestartet?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzen Sie 'Sync' oder 'Verknüpfung hinzufügen'?",
+                "type": "boolean"
+            },
+            {
+                "text": "Erhalten Sie eine Fehlermeldung?",
+                "type": "text"
+            }
+        ],
+        "steps": [
+            "Verwenden Sie 'Verknüpfung zu OneDrive hinzufügen' (Add Shortcut to OneDrive) statt des klassischen Syncs, da dies performanter ist und weniger lokale Ressourcen verbraucht.",
+            "Prüfen Sie, ob die Bibliothek die Grenze von 300.000 Dateien überschreitet (Soft Limit für den Sync Client). Wenn ja, müssen Sie Unterordner synchronisieren.",
+            "Kopieren Sie die 'Bibliotheks-ID' aus der URL und versuchen Sie den Sync manuell über die OneDrive-Einstellungen zu triggern ('configure' command URI)."
+        ],
+        "tags": [
+            "sharepoint",
+            "onedrive",
+            "sync",
+            "shortcut"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-007",
+        "title": "SharePoint Listen oder Bibliotheken sind nicht mehr auffindbar",
+        "category": "SharePoint",
+        "symptom": "Ein Link in der Navigation funktioniert nicht mehr oder die Bibliothek ist weg.",
+        "causes": "Gelöscht, URL geändert, Berechtigung entzogen.",
+        "questions": [
+            {
+                "text": "Haben Sie im Papierkorb der Website nachgesehen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde die Bibliothek umbenannt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Sehen Sie die Bibliothek unter 'Websiteinhalte'?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie noch Zugriff über einen direkten Link?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wurde die Navigation bearbeitet?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Durchsuchen Sie den 'Zweiten Papierkorb' (Site Collection Recycle Bin) im Admin-Kontext, falls der User-Papierkorb leer ist.",
+            "Prüfen Sie via PowerShell (Get-SPOSite -Identity <Url> | Get-SPOList), ob die Liste technisch noch existiert, aber evtl. 'Hidden' ist.",
+            "Kontrollieren Sie die 'Navigations'-Einstellungen. Oft sind Links statisch und brechen, wenn die Liste umbenannt wird (URL-Change)."
+        ],
+        "tags": [
+            "sharepoint",
+            "missing",
+            "navigation",
+            "restore"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "SP-008",
+        "title": "Externe Benutzer können nicht auf freigegebene Inhalte zugreifen",
+        "category": "SharePoint",
+        "symptom": "Externer Partner erhält 'Zugriff verweigert' trotz Einladung.",
+        "causes": "Gast-Account nicht eingelöst, falscher Account (MSA vs. Work), Tenant-Restriktionen.",
+        "questions": [
+            {
+                "text": "Hat der Externe die Einladung angenommen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Nutzt er die Email-Adresse, an die gesendet wurde?",
+                "type": "text"
+            },
+            {
+                "text": "Erscheint eine Microsoft-Anmeldeseite?",
+                "type": "boolean"
+            },
+            {
+                "text": "Ist externes Teilen auf der Site erlaubt?",
+                "type": "boolean"
+            },
+            {
+                "text": "Hat es früher funktioniert?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Löschen Sie den Gast-User aus dem SharePoint-Verzeichnis der Site Collection (/_layouts/15/people.aspx?MembershipGroupId=0) und laden Sie ihn neu ein.",
+            "Prüfen Sie im Azure AD, ob der Gast-User den Status 'InvitationAccepted' hat. Wenn nicht, senden Sie die Einladung erneut.",
+            "Stellen Sie sicher, dass keine 'Domain Restrictions' (Allow/Deny List) im SharePoint Admin Center das Teilen mit dieser spezifischen Domain verhindern."
+        ],
+        "tags": [
+            "sharepoint",
+            "extern",
+            "gast",
+            "zugriff"
+        ],
+        "l1_steps": [
+            "Starten Sie die Anwendung neu.",
+            "Prüfen Sie auf Updates."
+        ]
+    },
+    {
+        "id": "OUT-011",
+        "title": "E-Mails in Outlook nicht auffindbar",
+        "category": "Outlook",
+        "symptom": "Benutzer kann bestimmte E-Mails im Posteingang oder in Unterordnern nicht finden.",
+        "causes": "Versehentliches Verschieben, falsche Filter/Ansichten, gelöschte Elemente, oder Synchronisierungsprobleme.",
+        "questions": [
+            {
+                "text": "Haben Sie den Ordner 'Gelöschte Elemente' überprüft?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie die Suchfunktion verwendet, um nach dem Betreff oder Absender zu suchen?",
+                "type": "boolean"
+            },
+            {
+                "text": "Wann haben Sie die E-Mail zuletzt gesehen?",
+                "type": "text"
+            },
+            {
+                "text": "Fehlen die E-Mails auch in OWA (Outlook Web Access)?",
+                "type": "boolean"
+            },
+            {
+                "text": "Haben Sie Filter wie 'Ungelesen' oder 'An mich' aktiviert?",
+                "type": "boolean"
+            }
+        ],
+        "steps": [
+            "Überprüfen Sie die Regeln im Outlook-Client und in OWA auf automatische Verschiebungen.",
+            "Starten Sie Outlook mit dem Parameter 'outlook.exe /cleanviews', um Ansichtsfilter zu löschen.",
+            "Prüfen Sie den Synchronisierungsstatus in der Statusleiste unten rechts.",
+            "Erstellen Sie ein neues Outlook-Profil, falls die OST-Datei beschädigt ist.",
+            "Führen Sie eine erweiterte Suche (Strg+Umschalt+F) durch, um versteckte Elemente zu finden."
+        ],
+        "tags": [
+            "outlook",
+            "email",
+            "suche",
+            "verschwunden",
+            "sync"
+        ],
+        "l1_steps": [
+            "Prüfen Sie den Ordner 'Wiederherstellbare Elemente' im Reiter 'Ordner'.",
+            "Setzen Sie die Ansichtseinstellungen zurück (Ansicht > Ansicht zurücksetzen)."
+        ]
+    }
+]
