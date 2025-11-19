@@ -1,43 +1,31 @@
-<div class="container">
-  <header class="hero">
-    <div class="hero-content">
-      <img src="/assets/hero-cat.png" alt="CiC Support Cat" class="hero-image">
-
-      <div class="search-box">
-        <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" [placeholder]="searchPlaceholder"
-          class="search-input">
+<div class="content-layout">
+  <aside class="sidebar">
+    <div class="word-cloud-container">
+      <div class="cloud-tags">
+        <span *ngFor="let tag of tags" (click)="filterByTag(tag.name)" class="cloud-tag" [style.color]="tag.color"
+          [style.fontSize.em]="tag.size" [title]="tag.count + ' Artikel'">
+          {{ tag.name }}
+        </span>
       </div>
     </div>
-  </header>
+  </aside>
 
-  <div class="content-layout">
-    <aside class="sidebar">
-      <div class="word-cloud-container">
-        <div class="cloud-tags">
-          <span *ngFor="let tag of tags" (click)="filterByTag(tag.name)" class="cloud-tag" [style.color]="tag.color"
-            [style.fontSize.em]="tag.size" [title]="tag.count + ' Artikel'">
-            {{ tag.name }}
-          </span>
-        </div>
+  <section class="results">
+    <div *ngFor="let article of filteredArticles" class="article-card" [routerLink]="['/article', article.id]">
+      <div class="card-header">
+        <span class="category-badge">{{ article.category }}</span>
+        <span class="id-badge">{{ article.id }}</span>
       </div>
-    </aside>
+      <h2>{{ article.title }}</h2>
+      <p class="symptom">{{ article.symptom }}</p>
+      <div class="card-tags">
+        <span *ngFor="let tag of article.tags.slice(0, 3)" class="mini-tag">#{{ tag }}</span>
+      </div>
+    </div>
 
-    <section class="results">
-      <div *ngFor="let article of filteredArticles" class="article-card" [routerLink]="['/article', article.id]">
-        <div class="card-header">
-          <span class="category-badge">{{ article.category }}</span>
-          <span class="id-badge">{{ article.id }}</span>
-        </div>
-        <h2>{{ article.title }}</h2>
-        <p class="symptom">{{ article.symptom }}</p>
-        <div class="card-tags">
-          <span *ngFor="let tag of article.tags.slice(0, 3)" class="mini-tag">#{{ tag }}</span>
-        </div>
-      </div>
-
-      <div *ngIf="filteredArticles.length === 0" class="no-results">
-        <p>Keine Artikel gefunden. Versuche einen anderen Suchbegriff.</p>
-      </div>
-    </section>
-  </div>
+    <div *ngIf="filteredArticles.length === 0" class="no-results">
+      <p>Keine Artikel gefunden. Versuche einen anderen Suchbegriff.</p>
+    </div>
+  </section>
+</div>
 </div>
