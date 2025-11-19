@@ -1,0 +1,70 @@
+Häufige Probleme mit Outlook
+------------------------------------------------------------
+Outlook startet nicht oder friert beim Öffnen ein
+
+Outlook kann keine Verbindung zum Exchange Server herstellen
+
+Emails bleiben im Postausgang hängen
+
+Empfangene Emails erscheinen nicht im Posteingang
+
+Outlook fordert wiederholt zur Passworteingabe auf
+
+Outlook ist extrem langsam beim Laden oder Wechseln von Ordnern
+
+Suchfunktion in Outlook liefert keine oder falsche Ergebnisse
+
+Kalender synchronisiert nicht mit mobilen Geräten
+
+Freigegebene Postfächer oder Kalender sind nicht sichtbar
+
+Outlook Add-Ins verursachen Abstürze oder Fehlfunktionen
+
+
+Häufige Probleme mit Messaging und Exchange Online
+------------------------------------------------------------
+Email Zustellung verzögert oder fehlerhaft
+
+Email Weiterleitungen funktionieren nicht zuverlässig
+
+SPF, DKIM oder DMARC sind falsch konfiguriert
+
+Benutzer erhalten Spam trotz aktivem Filter
+
+Email Signaturen werden nicht korrekt angewendet
+
+
+Häufige Probleme mit Synchronisierung und OneDrive
+------------------------------------------------------------
+OneDrive synchronisiert keine Dateien oder Ordner
+
+Synchronisierungskonflikte bei gemeinsam genutzten Dateien
+
+OneDrive zeigt „Synchronisierung ausgesetzt“ oder „Fehler“
+
+Dateien verschwinden nach Synchronisierung oder sind nicht auffindbar
+
+OneDrive fordert wiederholt zur Anmeldung auf
+
+Speichergrenze erreicht, ohne Warnung oder Hinweis
+
+Freigabe von Dateien funktioniert nicht oder erzeugt Fehlermeldungen
+
+
+Häufige Probleme mit SharePoint
+------------------------------------------------------------
+SharePoint-Seiten laden nicht oder zeigen Fehler
+
+Benutzer können nicht auf freigegebene Dokumente zugreifen
+
+Berechtigungen sind falsch oder unklar konfiguriert
+
+Dokumentversionierung funktioniert nicht wie erwartet
+
+SharePoint-Suche liefert keine oder veraltete Ergebnisse
+
+Synchronisierung von SharePoint Bibliotheken mit OneDrive schlägt fehl
+
+SharePoint Listen oder Bibliotheken sind nicht mehr auffindbar
+
+Externe Benutzer können nicht auf freigegebene Inhalte zugreifen

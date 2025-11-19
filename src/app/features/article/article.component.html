@@ -1,0 +1,102 @@
+<div class="container" *ngIf="article; else loading">
+    <a routerLink="/" class="back-link">← Zurück zur Übersicht</a>
+
+    <article class="kb-article">
+        <header class="article-header">
+            <div class="meta">
+                <span class="category-badge">{{ article.category }}</span>
+                <span class="id-badge">{{ article.id }}</span>
+            </div>
+            <h1>{{ article.title }}</h1>
+        </header>
+
+        <section class="symptom-box">
+            <h3>Symptom</h3>
+            <p>{{ article.symptom }}</p>
+        </section>
+
+        <section class="causes-box">
+            <h3>Mögliche Ursachen</h3>
+            <p>{{ article.causes }}</p>
+        </section>
+
+        <section class="qa-box" *ngIf="article.questions && article.questions.length > 0">
+            <div class="qa-header">
+                <h3>L1 Triage</h3>
+                <button (click)="copyToClipboard()" class="copy-btn" title="Copy Protocol" aria-label="Copy Protocol">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="notes-area">
+                <label>Agenten-Notizen:</label>
+                <textarea [(ngModel)]="notes" placeholder="Kunde sagt..."></textarea>
+            </div>
+
+            <div class="qa-list">
+                <div *ngFor="let question of article.questions; let i = index" class="qa-item">
+                    <span class="question-text">{{ question.text }}</span>
+
+                    <!-- Boolean Toggle -->
+                    <div class="answer-toggles" *ngIf="question.type === 'boolean'">
+                        <button class="toggle-btn yes-btn" [class.active]="answers[i] === true"
+                            (click)="setAnswer(i, true)">
+                            YES
+                        </button>
+                        <button class="toggle-btn no-btn" [class.active]="answers[i] === false"
+                            (click)="setAnswer(i, false)">
+                            NO
+                        </button>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div class="answer-input" *ngIf="question.type === 'text'">
+                        <input type="text" [ngModel]="answers[i]" (ngModelChange)="setAnswer(i, $event)"
+                            placeholder="Eingabe..." class="text-answer-field">
+                    </div>
+
+                    <!-- Choice Options -->
+                    <div class="answer-choices" *ngIf="question.type === 'choice'">
+                        <button *ngFor="let option of question.options" class="choice-btn"
+                            [class.active]="answers[i] === option" (click)="setAnswer(i, option)">
+                            {{ option }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="l1-troubleshooting-box" *ngIf="article.l1_steps && article.l1_steps.length > 0">
+            <h3>L1.5 Troubleshooting</h3>
+            <ul class="l1-steps-list">
+                <li *ngFor="let step of article.l1_steps">{{ step }}</li>
+            </ul>
+        </section>
+
+        <section class="steps-box">
+            <h3>L2 Lösungsschritte</h3>
+            <div class="steps-list">
+                <div *ngFor="let step of article.steps; let i = index" class="step-item">
+                    <div class="step-number">{{ i + 1 }}</div>
+                    <div class="step-content">{{ step }}</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="article-footer">
+            <div class="tags">
+                <span *ngFor="let tag of article.tags" class="tag-pill">#{{ tag }}</span>
+            </div>
+        </footer>
+    </article>
+</div>
+
+<ng-template #loading>
+    <div class="loading-state">
+        <p>Artikel wird geladen...</p>
+    </div>
+</ng-template>
