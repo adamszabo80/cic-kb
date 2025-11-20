@@ -38,6 +38,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/cic-m365-kb",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -88,6 +89,10 @@
             }
           },
           "defaultConfiguration": "development"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"

@@ -18,52 +18,6 @@
 }
 
 .hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.hero-image {
-  max-width: 80px;
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-  animation: float 6s ease-in-out infinite;
-}
-
-.cat-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.search-box {
-  margin-top: 2rem;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.search-input {
-  width: 100%;
-  padding: 1rem 1.5rem;
-  font-size: 1.1rem;
   border: 2px solid var(--border-color);
   border-radius: 50px;
   background: var(--input-bg);

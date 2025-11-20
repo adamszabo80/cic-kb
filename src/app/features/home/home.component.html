@@ -1,27 +1,13 @@
 <div class="container">
   <header class="hero">
-    <div class="hero-content">
-      <div class="hero-image">
-        <img src="assets/hero-cat.png" alt="CiC Support Cat" class="cat-img">
-      </div>
-
-      <div class="search-box">
-        <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" [placeholder]="searchPlaceholder"
-          class="search-input">
+    <div class="word-cloud-container">
+      <div class="cloud-tags">
+        <span *ngFor="let tag of tags" (click)="filterByTag(tag.name)" class="cloud-tag" [style.color]="tag.color"
+          [style.fontSize.em]="tag.size" [title]="tag.count + ' Artikel'">
+          {{ tag.name }}
+        </span>
       </div>
     </div>
-  </header>
-
-  <div class="content-layout">
-    <aside class="sidebar">
-      <div class="word-cloud-container">
-        <div class="cloud-tags">
-          <span *ngFor="let tag of tags" (click)="filterByTag(tag.name)" class="cloud-tag" [style.color]="tag.color"
-            [style.fontSize.em]="tag.size" [title]="tag.count + ' Artikel'">
-            {{ tag.name }}
-          </span>
-        </div>
-      </div>
     </aside>
 
     <section class="results">
@@ -41,5 +27,5 @@
         <p>Keine Artikel gefunden. Versuche einen anderen Suchbegriff.</p>
       </div>
     </section>
-  </div>
+</div>
 </div>
